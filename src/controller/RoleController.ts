@@ -9,7 +9,7 @@ export const createRole = async (req: Request, res: Response) => {
       _id: { $in: permissions },
     }).countDocuments();
     if (permissions?.length !== isPresent) {
-      return res.status(400).json({ message: "Invalid Data " });
+      return res.status(400).json({ message: "Invalid Data" });
     }
     const newRole = new Roles({
       roleName,
@@ -24,7 +24,7 @@ export const createRole = async (req: Request, res: Response) => {
 
 export const getRoles = async (req: Request, res: Response) => {
   try {
-    const getRoleList = await Roles.find().populate("permissions").exec();
+    const getRoleList = await Roles.find();
     res.status(200).json(getRoleList);
   } catch (error) {
     res.status(500).json({ message: error });
