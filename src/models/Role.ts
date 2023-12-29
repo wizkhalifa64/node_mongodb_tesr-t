@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import PermissionModel from "./Permissions";
 
 const RoleSchema = new Schema({
   roleName: {
@@ -9,7 +8,12 @@ const RoleSchema = new Schema({
     max: 100,
   },
   permissions: {
-    type: [PermissionModel.schema],
+    type: [
+      {
+        _id: String,
+        name: String,
+      },
+    ],
     default: [],
   },
 });
