@@ -10,7 +10,7 @@ const authorise = (roles: any[] = []) => {
       return res.status(403).json({ message: "Access denied" });
     }
     if (token.startsWith("Bearer ")) {
-      token = token.slice(7, token.length).trimLeft();
+      token = token.slice(7, token.length).trim();
     }
     const verified = jwt.verify(token, process.env.JWT_SECRET as string);
     if (roles.includes("hi")) {

@@ -20,6 +20,7 @@ const EmployeeSchema = new Schema({
     country: String,
     postal_ode: String,
   },
+  password: { type: String, required: true, min: 4 },
   is_delete: { type: Boolean, default: false },
   qualification: [
     { name: String, gread: String, institution: String, passout_year: Date },
@@ -30,7 +31,8 @@ const EmployeeSchema = new Schema({
     academic_verified: { type: Boolean, default: false },
   },
   roles: {
-    type: [{ type: Schema.Types.ObjectId, ref: "Roles" }],
+    type: Schema.Types.ObjectId,
+    ref: "Roles",
   },
 });
 

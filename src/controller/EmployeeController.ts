@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import Roles from "../models/Role";
 import EmployeeModel from "../models/Employee";
-
+import bcrypt from "bcrypt";
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const employeevalidation = z.object({
@@ -23,6 +23,7 @@ export const createEmployee = async (req: Request, res: Response) => {
         })
         .optional(),
       is_delete: z.boolean().optional(),
+      password: z.string(),
       qualification: z
         .object({
           name: z.string().optional(),
@@ -39,20 +40,20 @@ export const createEmployee = async (req: Request, res: Response) => {
           academic_verified: z.boolean().optional(),
         })
         .optional(),
-      roles: z.string().array(),
+      roles: z.string(),
     });
     employeevalidation.parse(req.body);
 
     const isRolePresent = await Roles.find({
-      _id: {
-        $in: req.body.roles,
-      },
-    }).countDocuments();
-    console.log(isRolePresent);
-    if (req.body?.roles?.length !== isRolePresent) {
+      _id: req.body.roles,
+    });
+    if (!isRolePresent) {
       return res.status(400).json({ message: "Invalid Data" });
     }
-    const saveEmployee = new EmployeeModel(req.body);
+    const { password, ...rest } = req.body;
+    const salt = await bcrypt.genSalt(5);
+    const passwordHash = await bcrypt.hash(password, salt);
+    const saveEmployee = new EmployeeModel({ ...rest, password: passwordHash });
     await saveEmployee.save();
     res.status(200).json({ message: "user created" });
   } catch (error) {

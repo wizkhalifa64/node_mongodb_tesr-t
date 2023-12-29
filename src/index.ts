@@ -5,11 +5,14 @@ import { config } from "dotenv";
 import mongoose from "mongoose";
 import adminRouter from "./router/admin";
 import employeeRouter from "./router/employee";
+import authRouter from "./router/auth";
+
 function main() {
   config();
   const app = express();
   app.use(express.json());
   app.use(cors());
+  app.use("/auth", authRouter);
   app.use("/admin", adminRouter);
   app.use("/employee", employeeRouter);
   const PORT = process.env.PORT;
